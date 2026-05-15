@@ -5,6 +5,8 @@ import {
   Container, VStack, HStack, Grid, GridItem,
   Spinner, Alert, Modal, ToastProvider, useToast, Tooltip,
   Heading, Text, Code, Divider,
+  Select, Checkbox, CheckboxGroup,
+  Table, TableHead, TableBody, TableFoot, TableRow, TableHeader, TableCell,
 } from './design-system'
 
 function ToastDemo() {
@@ -117,6 +119,66 @@ const radiiScale = [
   { label: '3xl',  cls: 'rounded-3xl',  value: '24px'    },
   { label: 'full', cls: 'rounded-full', value: '9999px'  },
 ]
+
+const tableData = [
+  { id: 1, name: 'Alice Johnson',  role: 'Designer',   status: 'active',   joined: 'Jan 2023' },
+  { id: 2, name: 'Bob Smith',      role: 'Engineer',   status: 'active',   joined: 'Mar 2023' },
+  { id: 3, name: 'Carol Williams', role: 'PM',         status: 'inactive', joined: 'Jun 2022' },
+  { id: 4, name: 'David Brown',    role: 'Engineer',   status: 'pending',  joined: 'Sep 2023' },
+  { id: 5, name: 'Eva Martinez',   role: 'Designer',   status: 'active',   joined: 'Nov 2023' },
+]
+
+const statusBadge: Record<string, React.ReactNode> = {
+  active:   <Badge variant="success" dot>Active</Badge>,
+  inactive: <Badge variant="default" dot>Inactive</Badge>,
+  pending:  <Badge variant="warning" dot>Pending</Badge>,
+}
+
+function TableDemo({ striped, bordered, size }: { striped?: boolean; bordered?: boolean; size?: 'sm' | 'md' | 'lg' }) {
+  return (
+    <Table striped={striped} bordered={bordered} size={size}>
+      <TableHead>
+        <TableRow>
+          <TableHeader>#</TableHeader>
+          <TableHeader sortable sortDirection="asc">Name</TableHeader>
+          <TableHeader>Role</TableHeader>
+          <TableHeader>Status</TableHeader>
+          <TableHeader>Joined</TableHeader>
+          <TableHeader>Actions</TableHeader>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {tableData.map((row) => (
+          <TableRow key={row.id}>
+            <TableCell className="text-gray-400 font-mono">{row.id}</TableCell>
+            <TableCell>
+              <HStack gap="2" align="center">
+                <Avatar name={row.name} size="sm" />
+                <Text size="sm" weight="medium">{row.name}</Text>
+              </HStack>
+            </TableCell>
+            <TableCell><Text size="sm" color="muted">{row.role}</Text></TableCell>
+            <TableCell>{statusBadge[row.status]}</TableCell>
+            <TableCell><Text size="sm" color="muted">{row.joined}</Text></TableCell>
+            <TableCell>
+              <HStack gap="2">
+                <Button size="xs" variant="ghost">Edit</Button>
+                <Button size="xs" variant="ghost" className="text-danger-500 hover:text-danger-700">Delete</Button>
+              </HStack>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+      <TableFoot>
+        <TableRow>
+          <TableCell colSpan={6}>
+            <Text size="xs" color="muted">{tableData.length} members total</Text>
+          </TableCell>
+        </TableRow>
+      </TableFoot>
+    </Table>
+  )
+}
 
 export default function App() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -508,6 +570,105 @@ export default function App() {
                 <GridItem colSpan={4}><div className="h-12 rounded-lg bg-warning-50 border border-yellow-200 flex items-center justify-center text-xs text-yellow-700 font-medium">4 cols</div></GridItem>
                 <GridItem colSpan={4}><div className="h-12 rounded-lg bg-danger-50 border border-red-200 flex items-center justify-center text-xs text-red-700 font-medium">4 cols</div></GridItem>
               </Grid>
+            </Section>
+
+            {/* Select */}
+            <Section title="Select">
+              <Grid cols={1} mdCols={2} gap="4">
+                <Select
+                  label="Framework"
+                  placeholder="Pick a framework..."
+                  options={[
+                    { value: 'react',  label: 'React' },
+                    { value: 'vue',    label: 'Vue' },
+                    { value: 'svelte', label: 'Svelte' },
+                    { value: 'solid',  label: 'SolidJS' },
+                  ]}
+                  hint="Choose your preferred framework"
+                />
+                <Select
+                  label="Status"
+                  options={[
+                    { value: 'active',   label: 'Active' },
+                    { value: 'inactive', label: 'Inactive' },
+                    { value: 'pending',  label: 'Pending' },
+                    { value: 'archived', label: 'Archived', disabled: true },
+                  ]}
+                  defaultValue="active"
+                />
+                <Select
+                  label="With error"
+                  placeholder="Select a role..."
+                  options={[
+                    { value: 'admin',  label: 'Admin' },
+                    { value: 'editor', label: 'Editor' },
+                    { value: 'viewer', label: 'Viewer' },
+                  ]}
+                  error="Please select a role"
+                />
+                <VStack gap="2">
+                  <Text size="sm" weight="medium" color="muted">Sizes</Text>
+                  <Select size="sm" options={[{ value: '1', label: 'Small select' }]} defaultValue="1" />
+                  <Select size="md" options={[{ value: '1', label: 'Medium select' }]} defaultValue="1" />
+                  <Select size="lg" options={[{ value: '1', label: 'Large select' }]}  defaultValue="1" />
+                </VStack>
+              </Grid>
+            </Section>
+
+            {/* Checkbox */}
+            <Section title="Checkbox">
+              <Grid cols={1} mdCols={2} gap="8">
+                <VStack gap="3">
+                  <Text size="sm" weight="medium" color="muted">States</Text>
+                  <Checkbox id="cb1" label="Unchecked" />
+                  <Checkbox id="cb2" label="Checked" defaultChecked />
+                  <Checkbox id="cb3" label="Indeterminate" indeterminate />
+                  <Checkbox id="cb4" label="Disabled" disabled />
+                  <Checkbox id="cb5" label="Disabled checked" disabled defaultChecked />
+                  <Checkbox id="cb6" label="With description" description="This is a helpful description for the option." defaultChecked />
+                  <Checkbox id="cb7" label="With error" error="This field is required." />
+                </VStack>
+                <VStack gap="6">
+                  <CheckboxGroup
+                    label="Notifications"
+                    options={[
+                      { value: 'email',  label: 'Email',        description: 'Get notified via email' },
+                      { value: 'sms',    label: 'SMS',          description: 'Get notified via text message' },
+                      { value: 'push',   label: 'Push',         description: 'Get browser push notifications' },
+                      { value: 'slack',  label: 'Slack',        description: 'Get notified in Slack', disabled: true },
+                    ]}
+                    value={['email', 'push']}
+                  />
+                  <VStack gap="2">
+                    <Text size="sm" weight="medium" color="muted">Sizes</Text>
+                    <Checkbox id="cbsm" label="Small checkbox"  size="sm" defaultChecked />
+                    <Checkbox id="cbmd" label="Medium checkbox" size="md" defaultChecked />
+                    <Checkbox id="cblg" label="Large checkbox"  size="lg" defaultChecked />
+                  </VStack>
+                </VStack>
+              </Grid>
+            </Section>
+
+            {/* Table */}
+            <Section title="Table">
+              <VStack gap="6">
+                <div>
+                  <Text size="sm" weight="medium" color="muted" className="mb-3">Default</Text>
+                  <TableDemo striped={false} bordered={false} />
+                </div>
+                <div>
+                  <Text size="sm" weight="medium" color="muted" className="mb-3">Striped</Text>
+                  <TableDemo striped bordered={false} />
+                </div>
+                <div>
+                  <Text size="sm" weight="medium" color="muted" className="mb-3">Bordered</Text>
+                  <TableDemo striped={false} bordered />
+                </div>
+                <div>
+                  <Text size="sm" weight="medium" color="muted" className="mb-3">Compact (sm)</Text>
+                  <TableDemo striped={false} bordered={false} size="sm" />
+                </div>
+              </VStack>
             </Section>
 
           </VStack>

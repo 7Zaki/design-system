@@ -12,6 +12,9 @@ export * from './components/base/Badge'
 export * from './components/base/Avatar'
 export * from './components/base/Typography'
 export * from './components/base/Divider'
+export * from './components/base/Select'
+export * from './components/base/Checkbox'
+export * from './components/base/Table'
 
 // Layout components
 export * from './components/layout/Container'
