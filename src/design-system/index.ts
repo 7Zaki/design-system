@@ -14,6 +14,8 @@ export * from './components/base/Typography'
 export * from './components/base/Divider'
 export * from './components/base/Select'
 export * from './components/base/Checkbox'
+export * from './components/base/Radio'
+export * from './components/base/Toggle'
 export * from './components/base/Table'
 
 // Layout components

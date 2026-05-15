@@ -6,6 +6,8 @@ import {
   Spinner, Alert, Modal, ToastProvider, useToast, Tooltip,
   Heading, Text, Code, Divider,
   Select, Checkbox, CheckboxGroup,
+  Radio, RadioGroup,
+  Toggle,
   Table, TableHead, TableBody, TableFoot, TableRow, TableHeader, TableCell,
 } from './design-system'
 
@@ -183,6 +185,10 @@ function TableDemo({ striped, bordered, size }: { striped?: boolean; bordered?: 
 export default function App() {
   const [modalOpen, setModalOpen] = useState(false)
   const [inputVal, setInputVal] = useState('')
+  const [selectedPlan, setSelectedPlan] = useState('pro')
+  const [selectedTheme, setSelectedTheme] = useState('')
+  const [toggleStates, setToggleStates] = useState({ notifications: true, darkMode: false, autoSave: true, analytics: false })
+  const setToggle = (key: keyof typeof toggleStates) => setToggleStates(s => ({ ...s, [key]: !s[key] }))
 
   return (
     <ToastProvider>
@@ -644,6 +650,88 @@ export default function App() {
                     <Checkbox id="cbsm" label="Small checkbox"  size="sm" defaultChecked />
                     <Checkbox id="cbmd" label="Medium checkbox" size="md" defaultChecked />
                     <Checkbox id="cblg" label="Large checkbox"  size="lg" defaultChecked />
+                  </VStack>
+                </VStack>
+              </Grid>
+            </Section>
+
+            {/* Radio */}
+            <Section title="Radio">
+              <Grid cols={1} mdCols={2} gap="8">
+                <RadioGroup
+                  name="plan"
+                  label="Billing plan"
+                  value={selectedPlan}
+                  onChange={setSelectedPlan}
+                  options={[
+                    { value: 'free',       label: 'Free',       description: 'Up to 3 projects, 1 seat' },
+                    { value: 'pro',        label: 'Pro',        description: '$12/mo · Unlimited projects' },
+                    { value: 'team',       label: 'Team',       description: '$49/mo · Up to 20 seats' },
+                    { value: 'enterprise', label: 'Enterprise', description: 'Custom pricing', disabled: true },
+                  ]}
+                />
+                <VStack gap="6">
+                  <RadioGroup
+                    name="theme"
+                    label="Theme (horizontal)"
+                    value={selectedTheme}
+                    onChange={setSelectedTheme}
+                    orientation="horizontal"
+                    options={[
+                      { value: 'light',  label: 'Light'  },
+                      { value: 'dark',   label: 'Dark'   },
+                      { value: 'system', label: 'System' },
+                    ]}
+                  />
+                  <RadioGroup
+                    name="theme-error"
+                    label="With error"
+                    options={[
+                      { value: 'a', label: 'Option A' },
+                      { value: 'b', label: 'Option B' },
+                    ]}
+                    error="Please select an option"
+                  />
+                  <VStack gap="2">
+                    <Text size="sm" weight="medium" color="muted">Sizes</Text>
+                    <Radio id="r-sm" name="size-demo" value="sm" label="Small"  size="sm" defaultChecked />
+                    <Radio id="r-md" name="size-demo" value="md" label="Medium" size="md" />
+                    <Radio id="r-lg" name="size-demo" value="lg" label="Large"  size="lg" />
+                  </VStack>
+                </VStack>
+              </Grid>
+            </Section>
+
+            {/* Toggle */}
+            <Section title="Toggle / Switch">
+              <Grid cols={1} mdCols={2} gap="8">
+                <VStack gap="4">
+                  <Text size="sm" weight="medium" color="muted">States &amp; labels</Text>
+                  <Toggle id="t-notif"    label="Email notifications" description="Receive updates via email"  checked={toggleStates.notifications} onChange={() => setToggle('notifications')} />
+                  <Toggle id="t-dark"     label="Dark mode"           description="Switch to dark theme"      checked={toggleStates.darkMode}       onChange={() => setToggle('darkMode')} />
+                  <Toggle id="t-save"     label="Auto-save"           description="Save changes automatically" checked={toggleStates.autoSave}       onChange={() => setToggle('autoSave')} />
+                  <Toggle id="t-analytics" label="Analytics"          description="Share anonymous usage data" checked={toggleStates.analytics}      onChange={() => setToggle('analytics')} />
+                  <Toggle id="t-disabled" label="Disabled off" disabled checked={false} />
+                  <Toggle id="t-disabled-on" label="Disabled on" disabled checked />
+                </VStack>
+                <VStack gap="6">
+                  <VStack gap="3">
+                    <Text size="sm" weight="medium" color="muted">Sizes</Text>
+                    <Toggle id="tsm" label="Small"  size="sm" checked={toggleStates.notifications} onChange={() => setToggle('notifications')} />
+                    <Toggle id="tmd" label="Medium" size="md" checked={toggleStates.notifications} onChange={() => setToggle('notifications')} />
+                    <Toggle id="tlg" label="Large"  size="lg" checked={toggleStates.notifications} onChange={() => setToggle('notifications')} />
+                  </VStack>
+                  <VStack gap="3">
+                    <Text size="sm" weight="medium" color="muted">Colors (when on)</Text>
+                    <Toggle id="tc-primary" label="Primary" color="primary" checked onChange={() => {}} />
+                    <Toggle id="tc-success" label="Success" color="success" checked onChange={() => {}} />
+                    <Toggle id="tc-warning" label="Warning" color="warning" checked onChange={() => {}} />
+                    <Toggle id="tc-danger"  label="Danger"  color="danger"  checked onChange={() => {}} />
+                  </VStack>
+                  <VStack gap="3">
+                    <Text size="sm" weight="medium" color="muted">Label position</Text>
+                    <Toggle id="tleft"  label="Label on left"  labelPosition="left"  checked={toggleStates.darkMode} onChange={() => setToggle('darkMode')} />
+                    <Toggle id="tright" label="Label on right" labelPosition="right" checked={toggleStates.darkMode} onChange={() => setToggle('darkMode')} />
                   </VStack>
                 </VStack>
               </Grid>
